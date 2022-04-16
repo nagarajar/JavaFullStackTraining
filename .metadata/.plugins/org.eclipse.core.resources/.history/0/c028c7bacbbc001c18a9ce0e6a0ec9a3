@@ -1,0 +1,12 @@
+package com.in28minutes.jpa.hibernate.jpahibernate.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.in28minutes.jpa.hibernate.jpahibernate.entity.Course;
+
+//1. Spring data repository always a interface
+//2. Extends from JpaRepository(Interface)
+public interface CourseSpringDataRepository extends JpaRepository<Course, Long>
+{
+
+}

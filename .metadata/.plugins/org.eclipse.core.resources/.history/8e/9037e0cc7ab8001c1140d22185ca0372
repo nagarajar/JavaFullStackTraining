@@ -1,0 +1,67 @@
+package com.in28minutes.jpa.hibernate.jpahibernate.entity;
+
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Calendar;
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+@Entity               //it is specialization of bean
+//@Table(name = "CourseDetails")    // Table annotation defines the name of the table, we can use this only entity and table names are different
+public class Course 
+{
+	@Id				 // it indicated the below fled is primary key for the table	
+	@GeneratedValue  // JPA will generate id or hibernate will provide id
+	private Long id;
+	
+	//@Column(name = "fullname")  // Column annotation defines the name of the Column, we can use this only field name and table column names are different
+	//@Column(name = "fullname", nullable = false) // this filed should ot be null 
+	@Column(nullable = false)
+	private String name;
+
+	//How can we know date and time of last updates and created
+	
+	@UpdateTimestamp
+	private LocalDateTime lastUpdatedDate;
+	
+	@CreationTimestamp
+	private LocalDateTime createdDate;
+	
+	protected Course() {
+		super();
+	}
+
+	public Course(String name) {
+		super();
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Course[%s]", name);
+	}
+	
+	
+}

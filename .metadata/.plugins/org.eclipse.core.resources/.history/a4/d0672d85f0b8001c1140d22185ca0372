@@ -1,0 +1,49 @@
+package com.in28minutes.jpa.hibernate.jpahibernate.entity;
+
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity               //1.it is specialization of bean
+public class Student 
+{
+	@Id				 //2. it indicated the below fled is primary key for the table	
+	@GeneratedValue  // JPA will generate id or hibernate will provide id
+	private Long id;
+	
+	//@Column(name = "fullname")  //4. Column annotation defines the name of the Column, we can use this only field name and table column names are different
+	//@Column(name = "fullname", nullable = false) // this filed should ot be null 
+	@Column(nullable = false)
+	private String name;
+	
+	protected Student() {
+		super();
+	}
+
+	public Student(String name) {
+		super();
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Student[%s]", name);
+	}
+	
+	
+}

@@ -1,0 +1,41 @@
+package com.in28minutes.jpa.hibernate.jpahibernate.repository;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.in28minutes.jpa.hibernate.jpahibernate.entity.Course;
+
+@Transactional
+@Repository
+public class CourseRepository 
+{
+	//In any repository class we can able to do 'talk to the EntityManager'
+	
+	//1. Auto wire
+	@Autowired
+	//2. use the below entity
+	EntityManager em;
+	
+	//3. created methods 
+	
+	public Course findById(Long id)  // we can pass id then will get or retrieve the course details
+	{
+		return em.find(Course.class, id);
+	}
+	
+/*	public Course save(Course course) // we can insert or update the course details
+	{
+		
+	}
+*/	
+	// we can pass id then will delete the course details
+	// Delete operation will change the database structure, its like retrieve.So Add @Transactional to avoid Errors
+	public void deleteById(Long id)  
+	{
+		Course course = findById(id);
+		em.remove(course);
+	}
+}

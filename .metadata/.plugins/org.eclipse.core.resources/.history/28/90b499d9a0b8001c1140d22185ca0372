@@ -1,0 +1,43 @@
+package com.in28minutes.jpa.hibernate.jpahibernate.repository;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.in28minutes.jpa.hibernate.jpahibernate.JpaHibernateApplication;
+import com.in28minutes.jpa.hibernate.jpahibernate.entity.Course;
+
+@SpringBootTest(classes = JpaHibernateApplication.class)
+public class NativeQueryTest 
+{
+	//Native query --> refers to actual sql queries (referring to actual database objects). 
+	//These queries are the sql statements which can be directly executed in database using a database client.
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	EntityManager em;
+	
+	@Test
+	public void native_queries_basic() 
+	{
+		Query query = em.createNativeQuery("select * from course", Course.class);
+		List resultList = query.getResultList();
+		logger.info("select * from course --> {} ", resultList);
+	}
+	
+	@Test
+	public void native_queries_with_parameter() 
+	{
+		Query query = em.createNativeQuery("select * from course where id = ?", Course.class);
+		query.setParameter(1, 10001L);
+		List resultList = query.getResultList();
+		logger.info("select * from course --> {} ", resultList);
+	}
+}

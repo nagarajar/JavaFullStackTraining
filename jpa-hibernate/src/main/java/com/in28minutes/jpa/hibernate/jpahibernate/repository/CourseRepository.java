@@ -1,0 +1,127 @@
+package com.in28minutes.jpa.hibernate.jpahibernate.repository;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.in28minutes.jpa.hibernate.jpahibernate.entity.Course;
+import com.in28minutes.jpa.hibernate.jpahibernate.entity.Review;
+
+@Transactional
+@Repository
+public class CourseRepository 
+{
+	//In any repository class we can able to do 'talk to the EntityManager'
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	//1. Auto wire
+	@Autowired
+	//2. use the below entity
+	EntityManager em;
+	
+	//3. created methods 
+	
+	public Course findById(Long id)  // we can pass id then will get or retrieve the course details
+	{
+		return em.find(Course.class, id);
+	}
+	
+	public Course save(Course course) // we can insert or update the course details
+	{
+		if(course.getId() == null){
+			//insert
+			em.persist(course);
+		}
+		else{
+			//update
+			em.merge(course);
+		}
+		
+		return course;
+	}
+	
+	// we can pass id then will delete the course details
+	// Delete operation will change the database structure, its like retrieve.So Add @Transactional to avoid Errors
+	public void deleteById(Long id)  
+	{
+		Course course = findById(id);
+		em.remove(course);
+	}
+	
+	//4. playWithEntityManager 
+	public void playWithEntityManager() {
+		//logger.info("playWithEntityManager - starts");
+		
+		Course course1 = new Course("Web services in 100 steps");
+		em.persist(course1);
+		Course course2 = new Course("Angular JS in 100 steps");
+		em.persist(course2);
+		
+		//1. what does flush do ?
+		em.flush(); //The changes which are done until than, they would be sent out to the database
+		
+		
+		//2. what does detach do? 
+		//em.detach(course2); // the changes that we did for course2 no long tracked after this 
+		//em.detach(course1); // the changes that we did for course1 no long tracked after this
+		
+		// Instead of calling every time the detach method for each object, we can use clear method
+		// what does clear do - it will do same thing as detach, but it will apply for everything 
+		//em.clear();
+		
+		course1.setName("Web services in 100 steps - Updated");
+		course2.setName("Angular JS in 100 steps - Updated");
+		
+		
+		//3. what does refresh will do? 
+		em.refresh(course1); // All the changes which are done on course1 are loosed
+		
+		em.flush();
+	}
+	
+	//5. adding reviews to the course
+	public void addHardCodedReviewsForCourse() {
+		//1. get the course 10003
+		Course course = findById(10003L);
+		logger.info("course.getReviews() --> {} ",course.getReviews());
+		//2. add 2 reviews to it
+		Review review1 = new Review("5", "Great Course");
+		Review review2 = new Review("5", "Hatsoff");
+		
+		//2.1 setting the relationship 
+		course.addReview(review1);
+		review1.setCourse(course);
+		
+		course.addReview(review2);
+		review2.setCourse(course);
+		
+		//3. save it to data base 
+		em.persist(review1);
+		em.persist(review2);
+		
+	}
+	
+	//6. adding reviews to the course using generalized insert method
+	public void addReviewsForCourse(Long courseId, List<Review> reviews) {
+		
+		Course course = findById(courseId);
+		logger.info("course.getReviews() --> {} ",course.getReviews());
+		
+		for(Review review: reviews) {
+			
+			// setting the relationship 
+			course.addReview(review);
+			review.setCourse(course);
+		
+			//save it to data base 
+			em.persist(review);
+		}
+			
+	}
+}

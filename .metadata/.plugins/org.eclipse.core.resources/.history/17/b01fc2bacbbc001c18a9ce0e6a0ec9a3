@@ -1,0 +1,102 @@
+package com.in28minutes.jpa.hibernate.jpahibernate.repository;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+
+import org.junit.jupiter.api.Test;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.in28minutes.jpa.hibernate.jpahibernate.JpaHibernateApplication;
+import com.in28minutes.jpa.hibernate.jpahibernate.entity.Course;
+import com.in28minutes.jpa.hibernate.jpahibernate.entity.Review;
+import com.in28minutes.jpa.hibernate.jpahibernate.repository.CourseRepository;
+
+@SpringBootTest(classes = JpaHibernateApplication.class)
+public class CourseSpringDataRepositoryTest 
+{
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	CourseSpringDataRepository repository;
+	
+	@Test
+	public void findById_CoursePresent()
+	{
+		// The CourseSpringDataRepository interface inherited the default method findById(id) from JpaRepository
+		Optional<Course> courseOptional = repository.findById(10001L); 
+		// the optional will provide addition feature to check the data exist or not
+		assertTrue(courseOptional.isPresent());
+	}
+	
+	@Test
+	public void findById_CourseNotPresent()
+	{
+		Optional<Course> courseOptional = repository.findById(20001L);
+		assertFalse(courseOptional.isPresent());
+	}
+	
+	@Test
+	public void playingAroundWithSpringDataRepository() 
+	{
+		//Create a new Course
+		Course course = new Course("HTML and CSS in 100 steps");
+		repository.save(course);
+		
+		//Update the course
+		course.setName("HTML and CSS in 100 steps - Updated");
+		repository.save(course);
+		
+		//Retrieve all courses
+		logger.info("Course --> {} ",repository.findAll());
+		
+		//Count no of course are there
+		logger.info("Course Count --> {} ",repository.count());
+		
+	}
+	
+	@Test
+	public void sort() 
+	{
+	
+		//Retrieve all courses in descending order
+		Sort sort = Sort.by(Sort.Direction.DESC, "name");
+		//Sort sort = Sort.by(Sort.Direction.ASC, "name");
+		logger.info("Course --> {} ",repository.findAll(sort));
+		//Before sorting
+		//Course --> [Course[HTML and CSS in 100 steps - Updated], Course[JPA in 50 steps], Course[Spring Frame in 100 steps], Course[Spring Boot in 50 steps],
+		//Course[Spring MVC in 50 steps]]
+		//After sorting
+		//Course --> [Course[Spring MVC in 50 steps], Course[Spring Frame in 100 steps], Course[Spring Boot in 50 steps], Course[JPA in 50 steps], 
+		//Course[HTML and CSS in 100 steps - Updated]] 
+	}
+	
+	@Test
+	public void pagination()
+	{
+		//Pagination --> limiting the data should be retrieved per page
+		PageRequest pageRequest = PageRequest.of(0, 3); // Page no zero and the no of records to retrieved is 3
+		Page<Course> firstPage = repository.findAll(pageRequest);
+		logger.info("First Page --> {} ",firstPage.getContent());
+		
+		Pageable secondPageable = firstPage.nextPageable();
+		Page<Course> secondPage = repository.findAll(secondPageable);
+		logger.info("Second Page --> {} ",secondPage.getContent());
+	}
+	
+}

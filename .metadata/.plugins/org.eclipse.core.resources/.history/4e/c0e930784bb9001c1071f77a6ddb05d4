@@ -1,0 +1,5 @@
+package com.in28minutes.jpa.hibernate.jpahibernate.repository;
+
+public class Test {
+
+}

@@ -1,0 +1,26 @@
+1649606945625	Copy compilation unit
+1649607376521	Copy compilation unit
+1649607794365	Copy compilation unit
+1649608025528	Rename field 'name'
+1649611207849	Move compilation unit
+1649611217135	Move compilation unit
+1649611222707	Move compilation unit
+1649611232596	Delete element
+1649611278509	Copy compilation unit
+1649649064568	Move compilation units
+1649649078976	Delete element
+1649649433209	Delete element
+1649649487313	Copy compilation unit
+1649649885727	Extract local variable 'find'
+1649944707015	Copy compilation unit
+1649945231633	Copy compilation unit
+1649945676062	Copy compilation unit
+1650006940844	Copy compilation unit
+1650007674814	Extract local variable 'criteriaBuilder'
+1650007744661	Extract local variable 'CreateQuery'
+1650007814008	Extract local variable 'from'
+1650008906878	Extract local variable 'like100Steps'
+1650015936251	Extract local variable 'join'
+1650026887406	Copy compilation unit
+1650027108440	Extract local variable 'course'
+1650031963516	Extract local variable 'firstPage'

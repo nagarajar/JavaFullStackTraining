@@ -1,0 +1,75 @@
+package com.in28minutes.jpa.hibernate.jpahibernate.entity;
+
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+@Entity               //1.it is specialization of bean
+
+//6. It used to reuse the query without rewriting, just by referring name of query you can achieve the same
+//@NamedQuery(name="query_get_all_course", query="select c from Course c")  
+
+//7. when you have multiple queries - more than one, you should use this named queries array
+@NamedQueries(value= {
+		@NamedQuery(name="query_get_all_course", query="select c from Course c"),
+		@NamedQuery(name="query_get_100 steps_courses", query="select c from Course c where name like '%100 steps'")
+})
+
+//@Table(name = "CourseDetails")    // 3.Table annotation defines the name of the table, we can use this only entity and table names are different
+public class Course 
+{
+	@Id				 //2. it indicated the below fled is primary key for the table	
+	@GeneratedValue  // JPA will generate id or hibernate will provide id
+	private Long id;
+	
+	//@Column(name = "fullname")  //4. Column annotation defines the name of the Column, we can use this only field name and table column names are different
+	//@Column(name = "fullname", nullable = false) // this filed should ot be null 
+	@Column(nullable = false)
+	private String name;
+
+	//5.How can we know date and time of last updates and created
+	
+	@UpdateTimestamp
+	private LocalDateTime lastUpdatedDate;
+	
+	@CreationTimestamp
+	private LocalDateTime createdDate;
+	
+	protected Course() {
+		super();
+	}
+
+	public Course(String name) {
+		super();
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Course[%s]", name);
+	}
+	
+	
+}
